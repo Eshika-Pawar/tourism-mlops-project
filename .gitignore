@@ -1,0 +1,4 @@
+mlruns/
+__pycache__/
+*.joblib
+tourism_project/model_building/artifacts/
