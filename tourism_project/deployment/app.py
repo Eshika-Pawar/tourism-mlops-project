@@ -13,15 +13,16 @@ st.set_page_config(page_title="Wellness Tourism Package Predictor", page_icon="ð
 @st.cache_resource
 def load_model():
     # config.json is written at deployment time and holds the model repo id
-   model_repo = os.getenv("MODEL_REPO")
-   config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
-   if model_repo is None and os.path.exists(config_path):
-       with open(config_path) as f:
-           model_repo = json.load(f)["model_repo"]
-   if model_repo is None:
-       st.error("Model repo not found: add config.json next to app.py "
-                "or set the MODEL_REPO environment variable / secret.")
-       st.stop()
+    model_repo = os.getenv("MODEL_REPO")
+    # config.json sits next to app.py (the working directory can be the repo root)
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+    if model_repo is None and os.path.exists(config_path):
+        with open(config_path) as f:
+            model_repo = json.load(f)["model_repo"]
+    if model_repo is None:
+        st.error("Model repo not found: add config.json next to app.py "
+                 "or set the MODEL_REPO environment variable / secret.")
+        st.stop()
 
     model_file = hf_hub_download(repo_id=model_repo, filename="best_tourism_model_v1.joblib")
     meta_file = hf_hub_download(repo_id=model_repo, filename="model_meta.json")
